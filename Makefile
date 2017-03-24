@@ -502,6 +502,10 @@ define ANDROID_RULES
 # $1 = arm-v7 (short arch)
 # $2 = armeabi-v7a (internal arch)
 
+.PHONY: android-cmake-$1
+android-cmake-$1: platform/android/configuration.gradle
+	cd platform/android && $(MBGL_ANDROID_GRADLE) -Pmapbox.abis=$2 -Pmapbox.with_test=true :MapboxGLAndroidSDK:generateJsonModel$(BUILDTYPE)
+
 .PHONY: android-test-lib-$1
 android-test-lib-$1: platform/android/configuration.gradle
 	cd platform/android && $(MBGL_ANDROID_GRADLE) -Pmapbox.abis=$2 -Pmapbox.with_test=true :MapboxGLAndroidSDKTestApp:assemble$(BUILDTYPE)

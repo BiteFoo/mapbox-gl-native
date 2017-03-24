@@ -14,26 +14,6 @@ workflows:
   primary:
     steps:
     - script:
-        title: Configure Google Cloud SDK
-        inputs:
-        - content: |-
-            #!/bin/bash
-            # Install python tools for pip
-            sudo apt-get install -y gcc python-dev python-setuptools
-            sudo easy_install -U pip
-            sudo pip uninstall crcmod
-            sudo pip install -U crcmod
-
-            # Install Google Cloud SDK for Firebase
-            export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
-            echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
-            curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-            sudo apt-get update && sudo apt-get install -y google-cloud-sdk
-
-            # Get authentication secret
-            echo "Downloading Google Cloud authentication:"
-            wget -O secret.json "$BITRISEIO_GCLOUD_SERVICE_ACCOUNT_JSON_URL"
-    - script:
         title: Build libmapbox-gl.so for armeabi-v7a
         inputs:
         - content: |-
@@ -84,6 +64,9 @@ workflows:
         inputs:
         - content: |-
             #!/bin/bash
+            echo "Downloading Google Cloud authentication:"
+            wget -O secret.json "$BITRISEIO_GCLOUD_SERVICE_ACCOUNT_JSON_URL"
+
             echo "Downloading Mapbox accesstoken for running tests:"
             wget -O platform/android/MapboxGLAndroidSDKTestApp/src/main/res/values/developer-config.xml "$BITRISEIO_TEST_ACCESS_TOKEN_UI_TEST_URL"
 
